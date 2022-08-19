@@ -1,0 +1,29 @@
+                                                        Juego Atrapa Cosas
+
+Esta es la solución de la prueba de Admira. Consiste en crear un videojuego que cumpla con una serie de requisitos.
+
+Mi implementación la he realizado en HTML, CSS y JavaScript para el frontend. Para el backend he usado PHP y Mysql para la BBDD.
+
+Implementaciones:
+
+He utilizado un canvas y le he añadido imágenes para hacer las animaciones.
+
+Para que el juego no sea tan monótono le he añadido funciones para obtener datos aleatorios.
+
+He utilizado objetos para guardar las propiedades de cada elemento del lienzo.
+
+El evento que controla el teclado discrimina todas las teclas que no se necesitan mientras está la partida en marcha.
+
+Le he añadido animaciones con CSS en el panel de resultados y diseño para mejorar la experiencia del usuario.
+
+Para guardar los nuevos récords he utilizado una BBDD Mysql con una tabla de puntuaciones.
+
+Los controladores de la base de datos los he escrito en PHP.
+
+Espero que os guste el resultado. Por mi parte he puesto todo mi empeño en hacer un trabajo que esté a la altura de vuestras expectativas.
+
+Saludos.
+
+---
+
+Agregando nuevas funcionalidades a petición de los gamers.

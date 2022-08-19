@@ -1,0 +1,159 @@
+/*
+
+variables globales
+
+
+*/
+:root {
+	--primer-color: #fc6364;
+	--segundo-color: #fdab77;
+	--tercer-color: #fefea2;
+	--cuarto-color: #bbfeb4;
+}
+body {
+	display: flex;
+	flex-direction: column;
+	background: var(--tercer-color);
+	min-height: 100vh;
+}
+
+.canvas,
+.resultados,
+.instrucciones {
+	display: flex;
+	margin-bottom: 10px;
+}
+
+/*Header e instrucciones*/
+.main-header {
+	margin-top: 20px;
+}
+.title {
+	text-align: center;
+	margin-bottom: 10px;
+	color: var(--primer-color);
+}
+
+.instrucciones {
+	flex-direction: column;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.instrucciones-header,
+.instrucciones-body {
+	width: 1200px;
+}
+
+.instrucciones-title {
+	margin: 10px 10px;
+	color: var(--primer-color);
+}
+
+p {
+	margin: 0 0 5px 15px;
+}
+
+/*Imagenes cargadas*/
+img {
+	display: none;
+}
+
+/*Canvas*/
+.canvas {
+	align-self: center;
+	width: 1200px;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 30px;
+	border: 5px var(--segundo-color) solid;
+	border-radius: 5px;
+	box-shadow: 2px 2px 5px #777;
+}
+
+/*Panel resultado*/
+.resultados {
+	width: 1200px;
+	height: 100px;
+	align-self: center;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-evenly;
+	border: 5px var(--segundo-color) solid;
+	border-radius: 5px;
+	box-shadow: 2px 2px 5px #777;
+	background-color: rgb(253, 246, 231);
+}
+
+.etiqueta {
+	display: inline-block;
+	padding: 0.375rem 0.75rem;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	vertical-align: middle;
+	user-select: none;
+	border: 1px solid var(--primer-color);
+	border-radius: 0.375rem;
+	background-color: var(--primer-color);
+}
+
+.display-none {
+	display: none;
+}
+
+.enable {
+	animation-name: opacityFull;
+	animation-duration: 1.2s;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+}
+
+.disable {
+	animation-name: opacityNone;
+	animation-duration: 1.2s;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+}
+
+/*animaciones*/
+
+@keyframes opacityNone {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes opacityFull {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	.instrucciones-header,
+	.instrucciones-body,
+	.canvas,
+	.resultados {
+		width: 1000px;
+	}
+}
+
+@media screen and (max-width: 1000px) {
+	.instrucciones-header,
+	.instrucciones-body,
+	.canvas,
+	.resultados {
+		width: 800px;
+	}
+}
