@@ -73,17 +73,25 @@
 		</section>
 
 		<section class="modalidad">
-			<div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+			<div class="btn-group btn-group-sm" role="group">
 				<input
 					type="radio"
 					class="btn-check"
-					name="dificultad"
+					name="modalidad"
 					id="facil"
+					value="facil"
+					autocomplete="off"
+				/>
+				<label class="btn btn-outline-primary bg-button" for="facil">Fácil</label>
+				<input
+					type="radio"
+					class="btn-check"
+					name="modalidad"
+					id="dificil"
+					value="dificil"
 					autocomplete="off"
 					checked
 				/>
-				<label class="btn btn-outline-primary bg-button" for="facil">Fácil</label>
-				<input type="radio" class="btn-check" name="dificultad" id="dificil" autocomplete="off" />
 				<label class="btn btn-outline-primary bg-button" for="dificil">Difícil</label>
 			</div>
 		</section>

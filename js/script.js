@@ -9,6 +9,7 @@ const buttonStart = document.getElementById('buttonStart');
 const puntuaje = document.getElementById('puntos');
 const startPanel = document.getElementById('start');
 const recordTexto = document.getElementById('record');
+const elemModalidad = document.getElementsByName('modalidad');
 
 //variables guardado de datos
 let elementos = [];
@@ -17,7 +18,7 @@ let fail = 0;
 let stage = {};
 let marcador = 0;
 let puntos = [];
-let madalidad = 'facil';
+let modalidad = 'dificil';
 
 //variables id de interval timeout
 let niveles, agregar, agBonus;
@@ -50,12 +51,12 @@ const draw = () => {
 		elemento.x += elemento.vx;
 		elemento.y += elemento.vy;
 
-		if (elemento.y + elemento.vy > canvas.height - 100 || elemento.y + elemento.vy < 10) {
+		if (elemento.y + elemento.vy > canvas.height - 85 || elemento.y + elemento.vy < 5) {
 			elemento.vy = -elemento.vy;
 		}
-		if (elemento.x + elemento.vx > canvas.width - 80 && elemento.letra !== 'b') {
+		if (elemento.x + elemento.vx > canvas.width - 68 && elemento.letra !== 'b') {
 			stop = true;
-		} else if (elemento.x + elemento.vx > canvas.width - 80 && elemento.letra === 'b') {
+		} else if (elemento.x + elemento.vx > canvas.width - 65 && elemento.letra === 'b') {
 			elementos.splice(index, 1);
 		}
 	});
@@ -91,8 +92,16 @@ const getCosas = ({ x = 5, y = 100, vx = 10, vy = 0, letra = 'b' }) => ({
 	vx,
 	vy,
 	letra,
+	desp: 0,
 	draw() {
-		ctx.drawImage(document.images[this.letra], this.x, this.y);
+		const image = document.images[this.letra];
+		if (modalidad === 'facil') {
+			ctx.font = '14px "Press Start 2P"';
+			ctx.fillStyle = '#fc6364';
+			ctx.fillText(this.letra.toUpperCase(), this.x + image.width / 2 - 7, this.y);
+			this.desp = 5;
+		}
+		ctx.drawImage(image, this.x, this.y + this.desp);
 	},
 });
 
@@ -149,8 +158,8 @@ const setDifficult = () => {
 		{ level: 2, vx: 2, max: 3, minA: 1200, maxA: 1600, puntos: 2000 },
 		{ level: 3, vx: 3, max: 4, minA: 1000, maxA: 1500, puntos: 4000 },
 		{ level: 4, vx: 5, max: 6, minA: 800, maxA: 1200, puntos: 6000 },
-		{ level: 5, vx: 6, max: 8, minA: 600, maxA: 1000, puntos: 8000 },
-		{ level: 6, vx: 8, max: 10, minA: 500, maxA: 800, puntos: 10000 },
+		{ level: 5, vx: 5, max: 8, minA: 600, maxA: 1000, puntos: 8000 },
+		{ level: 6, vx: 5, max: 10, minA: 500, maxA: 800, puntos: 10000 },
 	];
 
 	//cambiamos de dificultad cada cierto tiempo
@@ -389,6 +398,13 @@ const keyPresionada = (e) => {
 
 //-------------------------------------------------- Eventos --------------------------------------------
 
+//Evento que inicia el juego
+buttonStart.addEventListener('click', (e) => {
+	e.preventDefault();
+	start();
+	addEventListener('keydown', keyPresionada); //evento que contro las keys que tecleamos
+});
+
 //Evento que pinta el lienzo al cargar la página
 window.onload = () => {
 	drawBackground();
@@ -411,9 +427,10 @@ function start2() {
 	}
 }
 
-//Evento que inicia el juego
-buttonStart.addEventListener('click', (e) => {
-	e.preventDefault();
-	start();
-	addEventListener('keydown', keyPresionada); //evento que contro las keys que tecleamos
+//evento que cambia la modalidad
+
+elemModalidad.forEach((element) => {
+	element.addEventListener('change', (e) => {
+		modalidad = document.querySelector('input[name="modalidad"]:checked').value;
+	});
 });
