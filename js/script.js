@@ -1,7 +1,7 @@
 //instanciamos el canvas y los elementos html
 const canvas = document.getElementById('canvas');
 canvas.width = '1200';
-canvas.height = '500';
+canvas.height = '450';
 const ctx = canvas.getContext('2d');
 
 //identificamos elementos html
@@ -17,6 +17,7 @@ let fail = 0;
 let stage = {};
 let marcador = 0;
 let puntos = [];
+let madalidad = 'facil';
 
 //variables id de interval timeout
 let niveles, agregar, agBonus;
@@ -237,6 +238,7 @@ const sumarPuntos = (captura) => {
 	captura.letra === 'b' ? (puntos = 20000) : '';
 	marcador += puntos;
 	puntuaje.innerHTML = marcador;
+	marcador > parseInt(recordTexto.innerHTML) ? (recordTexto.innerHTML = marcador) : '';
 	return { p: puntos, x: captura.x, y: captura.y };
 };
 

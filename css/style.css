@@ -19,7 +19,8 @@ body {
 
 .canvas,
 .resultados,
-.instrucciones {
+.instrucciones,
+.modalidad {
 	display: flex;
 	margin-bottom: 10px;
 }
@@ -66,10 +67,24 @@ img {
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-	margin-bottom: 30px;
+	margin-bottom: 20px;
 	border: 5px var(--segundo-color) solid;
 	border-radius: 5px;
 	box-shadow: 2px 2px 5px #777;
+}
+
+/*Panel modalidad */
+.modalidad {
+	align-self: center;
+	width: 1200px;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 20px;
+}
+
+.bg-button {
+	background: rgb(253, 246, 231);
 }
 
 /*Panel resultado*/
@@ -144,6 +159,7 @@ img {
 	.instrucciones-header,
 	.instrucciones-body,
 	.canvas,
+	.modalidad,
 	.resultados {
 		width: 1000px;
 	}
@@ -153,6 +169,7 @@ img {
 	.instrucciones-header,
 	.instrucciones-body,
 	.canvas,
+	.modalidad,
 	.resultados {
 		width: 800px;
 	}

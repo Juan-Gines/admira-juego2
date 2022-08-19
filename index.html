@@ -21,6 +21,7 @@
 		<header class="main-header">
 			<h1 class="title">Atrapa Cosas</h1>
 		</header>
+
 		<section class="instrucciones">
 			<header class="instrucciones-header">
 				<h3 class="instrucciones-title">Instrucciones</h3>
@@ -66,12 +67,29 @@
 			<img id="y" src="imagenes/yeti.png" alt="el yeti" />
 			<img id="z" src="imagenes/zombi.png" alt="un zombi" />
 		</section>
-		<div class="canvas">
+
+		<section class="canvas">
 			<canvas id="canvas"></canvas>
-		</div>
+		</section>
+
+		<section class="modalidad">
+			<div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+				<input
+					type="radio"
+					class="btn-check"
+					name="dificultad"
+					id="facil"
+					autocomplete="off"
+					checked
+				/>
+				<label class="btn btn-outline-primary bg-button" for="facil">Fácil</label>
+				<input type="radio" class="btn-check" name="dificultad" id="dificil" autocomplete="off" />
+				<label class="btn btn-outline-primary bg-button" for="dificil">Difícil</label>
+			</div>
+		</section>
 		<section class="resultados">
 			<div id="start" class="start">
-				<button id="buttonStart" class="btn btn-primary btn-lg" type="button">
+				<button id="buttonStart" class="btn btn-success btn-lg" type="button">
 					<span>Empezar partida</span>
 				</button>
 			</div>
