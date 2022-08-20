@@ -267,21 +267,26 @@ const capturar = (key) => {
 		infoJugada(total, cosas, calidad);
 	} else {
 		fail++;
+		infoJugada(0, fail);
 	}
 };
 
 //actualizamos marcadores
 const infoJugada = (total, cosas, calidad = 3) => {
 	//actualizamos marcadores
-	let mensaje = ['Excelente', 'Bien', 'Regular', 'Cuidado'];
-	marcador += total;
-	puntuaje.innerHTML = marcador;
-	marcador > parseInt(recordTexto.innerHTML) ? (recordTexto.innerHTML = marcador) : '';
-	if (cosas === 1) {
-		infoTexto.innerHTML = '¡' + mensaje[calidad] + ' ' + total + '!';
+	if (total) {
+		let mensaje = ['Excelente', 'Bien', 'Regular', 'Cuidado'];
+		marcador += total;
+		puntuaje.innerHTML = marcador;
+		marcador > parseInt(recordTexto.innerHTML) ? (recordTexto.innerHTML = marcador) : '';
+		if (cosas === 1) {
+			infoTexto.innerHTML = '¡' + mensaje[calidad] + ' ' + total + '!';
+		} else {
+			infoTexto.innerHTML = '¡Combo X' + cosas + ' ' + total + '!';
+			agregarCombo({ p: total, n: cosas });
+		}
 	} else {
-		infoTexto.innerHTML = '¡Combo X' + cosas + ' ' + total + '!';
-		agregarCombo({ p: total, n: cosas });
+		infoTexto.innerHTML = '¡Fallaste X' + cosas + '!';
 	}
 };
 
