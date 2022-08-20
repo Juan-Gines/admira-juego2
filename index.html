@@ -73,7 +73,7 @@
 		</section>
 
 		<section class="modalidad">
-			<div class="btn-group btn-group-sm" role="group">
+			<div class="btn-group btn-group-sm enable" id="modalidad-group" role="group">
 				<input
 					type="radio"
 					class="btn-check"
@@ -96,22 +96,25 @@
 			</div>
 		</section>
 		<section class="resultados">
-			<div id="start" class="start">
-				<button id="buttonStart" class="btn btn-success btn-lg" type="button">
+			<div id="start">
+				<button id="buttonStart" class="btn btn-success btn-lg enable" type="button">
 					<span>Empezar partida</span>
 				</button>
 			</div>
-			<div class="panel-puntos">
+			<div>
 				<span class="etiqueta fs-5"
 					>Puntuación:
 					<span id="puntos">0</span>
 				</span>
 			</div>
-			<div class="panel-record">
+			<div>
 				<span class="etiqueta fs-5"
 					>Récord:
 					<span id="record">0</span>
 				</span>
+			</div>
+			<div id="panel-info" class="display-none">
+				<span id="info" class="etiqueta fs-5 disable">¡Buena suerte! </span>
 			</div>
 		</section>
 		<script src="js/script.js"></script>

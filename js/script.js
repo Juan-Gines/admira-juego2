@@ -9,6 +9,9 @@ const buttonStart = document.getElementById('buttonStart');
 const puntuaje = document.getElementById('puntos');
 const startPanel = document.getElementById('start');
 const recordTexto = document.getElementById('record');
+const infoPanel = document.getElementById('panel-info');
+const infoTexto = document.getElementById('info');
+const modalidadGroup = document.getElementById('modalidad-group');
 const elemModalidad = document.getElementsByName('modalidad');
 
 //variables guardado de datos
@@ -18,6 +21,7 @@ let fail = 0;
 let stage = {};
 let marcador = 0;
 let puntos = [];
+let combos = [];
 let modalidad = 'dificil';
 
 //variables id de interval timeout
@@ -28,7 +32,7 @@ let niveles, agregar, agBonus;
 //Función que pinta y controla los elementos moviles
 const draw = () => {
 	let stop = false;
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 	drawBackground();
 
 	//dibuja puntuajes en lienzo
@@ -42,6 +46,20 @@ const draw = () => {
 			}
 		} else {
 			puntos.splice(index, 1);
+		}
+	});
+
+	//dibuja combos en el lienzo
+	combos.forEach((combo, index) => {
+		if (combo.o > 0) {
+			combo.draw();
+			if (combo.t > 0) {
+				combo.t -= 1;
+			} else {
+				combo.o -= 0.01;
+			}
+		} else {
+			combos.splice(index, 1);
 		}
 	});
 
@@ -68,8 +86,8 @@ const draw = () => {
 };
 
 //Función que pinta el background del lienzo
-
 const drawBackground = () => {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	const linearGradient = ctx.createLinearGradient(
 		canvas.width / 2,
 		0,
@@ -81,6 +99,17 @@ const drawBackground = () => {
 	linearGradient.addColorStop(1, 'rgb(253, 246, 231)');
 	ctx.fillStyle = linearGradient;
 	ctx.fillRect(5, 0, canvas.width - 10, canvas.height);
+};
+
+//función que pinta el pantallazo final
+const pantallaFinal = () => {
+	ctx.font = '48px "Press Start 2P"';
+	ctx.fillStyle = '#fc6364';
+	ctx.fillText('GAME OVER', canvas.width / 2 - 200, 180);
+
+	ctx.font = '36px "Press Start 2P"';
+	ctx.fillStyle = 'black';
+	ctx.fillText('Tu puntuación: ' + marcador, canvas.width / 2 - 350, 300);
 };
 
 //----------------------- Funciones de lógica del juego y gestión de datos -----------------
@@ -119,6 +148,21 @@ const getPuntos = ({ x, y, p }) => ({
 	},
 });
 
+//Función que construye los datos de los combos a pintar
+const getCombos = ({ p, n }) => ({
+	x: canvas.width / 2 - 160,
+	y: 50,
+	p,
+	n,
+	o: 1,
+	t: 30,
+	draw() {
+		ctx.font = '24px "Press Start 2P"';
+		ctx.fillStyle = 'rgba(252, 99, 100,' + this.o + ')';
+		ctx.fillText('COMBO X' + this.n + ' ' + this.p, this.x, this.y + 25);
+	},
+});
+
 //Función que agrega elementos al array para pintarlos
 const agregarElementos = () => {
 	if (elementos.length < stage.max) {
@@ -135,11 +179,7 @@ const agregarElementos = () => {
 
 //Función que agrega elementos al array para pintarlos
 const agregarPuntos = ({ x, y, p }) => {
-	let punto = getPuntos({
-		x,
-		y,
-		p,
-	});
+	let punto = getPuntos({ x, y, p });
 	puntos.push(punto);
 };
 
@@ -148,6 +188,12 @@ const agregarBonus = () => {
 	let bono = getCosas({});
 	elementos.push(bono);
 	agBonus = setTimeout(agregarBonus, getRandomNumber(60000, 90000));
+};
+
+//Función que agrega el elemento b bonus al array para pintarlo
+const agregarCombo = ({ p, n }) => {
+	let combo = getCombos({ p, n });
+	combos.push(combo);
 };
 
 //Función que setea la dificultad y devuelve los datos referentes a ella
@@ -180,6 +226,10 @@ const setDifficult = () => {
 
 //Función que captura los elementos o suma fallos
 const capturar = (key) => {
+	let cosas = 0;
+	let puntos = [];
+	let total = 0;
+	let calidad = 3;
 	if (elementos.find((element) => element.letra == key)) {
 		if (key !== 'b') {
 			for (let i = 0; i < elementos.length; i++) {
@@ -187,7 +237,8 @@ const capturar = (key) => {
 					let captura = elementos.splice(i, 1);
 					i--;
 					let punto = sumarPuntos(captura[0]); //sumamos puntos al marcador
-					agregarPuntos(punto); //agregamos puntuaciones al array del lienzo
+					cosas++;
+					puntos.push(punto);
 				}
 			}
 		} else {
@@ -195,32 +246,68 @@ const capturar = (key) => {
 				let captura = elementos.splice(i, 1);
 				i--;
 				let punto = sumarPuntos(captura[0]);
-				agregarPuntos(punto);
+				cosas++;
+				puntos.push(punto);
 			}
 		}
+
+		//agregamos puntuaciones al array del lienzo
+		if (puntos.length === 1) {
+			agregarPuntos(puntos[0]);
+			total = puntos[0].p;
+			calidad = puntos[0].c;
+		} else {
+			puntos.forEach((puntuaciones) => {
+				agregarPuntos(puntuaciones);
+				total += puntuaciones.p;
+			});
+		}
+
+		//mandamos el total de la jugada
+		infoJugada(total, cosas, calidad);
 	} else {
 		fail++;
 	}
 };
 
-//Función que suma puntos al marcador y devuelve los datos para dibujar las puntuaciones
+//actualizamos marcadores
+const infoJugada = (total, cosas, calidad = 3) => {
+	//actualizamos marcadores
+	let mensaje = ['Excelente', 'Bien', 'Regular', 'Cuidado'];
+	marcador += total;
+	puntuaje.innerHTML = marcador;
+	marcador > parseInt(recordTexto.innerHTML) ? (recordTexto.innerHTML = marcador) : '';
+	if (cosas === 1) {
+		infoTexto.innerHTML = '¡' + mensaje[calidad] + ' ' + total + '!';
+	} else {
+		infoTexto.innerHTML = '¡Combo X' + cosas + ' ' + total + '!';
+		agregarCombo({ p: total, n: cosas });
+	}
+};
+
+//Función que que calcula los puntos al marcador y devuelve los datos para dibujar las puntuaciones
 const sumarPuntos = (captura) => {
 	let disX = (captura.x * 100) / canvas.width;
 	const divisores = [1, 0.9, 0.8, 0.7, 0.6, 0.5];
 	let puntos = stage.puntos;
+	let calidad = 0;
 
 	switch (true) {
 		case disX >= 75:
 			puntos = puntos * divisores[3];
+			calidad = 3;
 			break;
 		case disX < 75 && disX >= 50:
 			puntos = puntos * divisores[2];
+			calidad = 2;
 			break;
 		case disX < 50 && disX >= 25:
 			puntos = puntos * divisores[1];
+			calidad = 1;
 			break;
 		case disX < 25:
 			puntos = puntos * divisores[0];
+			calidad = 0;
 			break;
 	}
 	switch (fail) {
@@ -245,13 +332,53 @@ const sumarPuntos = (captura) => {
 	}
 	fail = 0;
 	captura.letra === 'b' ? (puntos = 20000) : '';
-	marcador += puntos;
-	puntuaje.innerHTML = marcador;
-	marcador > parseInt(recordTexto.innerHTML) ? (recordTexto.innerHTML = marcador) : '';
-	return { p: puntos, x: captura.x, y: captura.y };
+	return { p: puntos, x: captura.x, y: captura.y, c: calidad };
 };
 
 //Función que termina el juego, cancela eventos, intervalos, timeouts y animaciones
+
+//----------------- Funciones auxiliares-------------------------
+
+//Función que devuelve una letra random
+const getRandomChar = () => {
+	min = Math.ceil(97);
+	max = Math.floor(122);
+	let codAscii = Math.floor(Math.random() * (max - min + 1) + min);
+	if (codAscii === 98) {
+		return getRandomChar();
+	} else {
+		return String.fromCharCode(codAscii);
+	}
+};
+
+//Función que devuelve un número random
+const getRandomNumber = (min, max) => {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+//-------------------- Funciones que resetean variables y estados. Inician y finalizan el juego -----------------------
+
+//Función que inicia el juego
+const start = () => {
+	//reseteamos variables
+	reset();
+
+	//iniciamos datos temporales
+	time = Date.now();
+	setDifficult();
+	niveles = setInterval(setDifficult, 61000);
+
+	//iniciamos animaciones
+	switchAnimations('start');
+	//agregamos elementos al liezo y lo arrancamos
+	drawBackground();
+	agregarElementos();
+	agBonus = setTimeout(agregarBonus, 65000);
+	requestAnimationFrame(draw);
+};
+
 const gameOver = () => {
 	//Cancelamos animaciones temporales y removemos eventos
 	cancelAnimationFrame(requestAnimationFrame(draw));
@@ -260,30 +387,49 @@ const gameOver = () => {
 	clearTimeout(agBonus);
 	removeEventListener('keydown', keyPresionada);
 
-	//damos animaciones al panel de resultados
-	buttonStart.removeAttribute('disabled');
-	buttonStart.classList.add('enable');
-	buttonStart.classList.remove('disable');
-	startPanel.classList.remove('display-none');
-
+	switchAnimations('stop');
 	//dibujamos el game over en el lienzo
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	drawBackground();
-	ctx.font = '48px "Press Start 2P"';
-	ctx.fillStyle = '#fc6364';
-	ctx.fillText('GAME OVER', canvas.width / 2 - 200, 180);
-
-	ctx.font = '36px "Press Start 2P"';
-	ctx.fillStyle = 'black';
-	ctx.fillText('Tu puntuación: ' + marcador, canvas.width / 2 - 350, 300);
+	pantallaFinal();
 
 	//comprobamos si hemos conseguido un nuevo récord
 	comprobarRecord();
 };
 
+const switchAnimations = (mode) => {
+	//damos visivilidad y animacion al panel resultados start
+	if (mode == 'start') {
+		puntuaje.innerHTML = '0';
+		buttonStart.classList.replace('enable', 'disable');
+		buttonStart.setAttribute('disabled', true);
+		modalidadGroup.classList.add('disable');
+		elemModalidad.forEach((element) => {
+			element.setAttribute('disabled', true);
+		});
+		setTimeout(() => {
+			startPanel.classList.add('display-none');
+			infoPanel.classList.remove('display-none');
+			infoTexto.classList.replace('disable', 'enable');
+		}, 1200);
+	} else {
+		//damos animaciones al panel de resultados gameover
+		infoTexto.classList.replace('enable', 'disable');
+		modalidadGroup.classList.replace('disable', 'enable');
+		elemModalidad.forEach((element) => {
+			element.removeAttribute('disabled');
+		});
+		setTimeout(() => {
+			buttonStart.removeAttribute('disabled');
+			buttonStart.classList.replace('disable', 'enable');
+			startPanel.classList.remove('display-none');
+			infoPanel.classList.add('display-none');
+		}, 1200);
+	}
+};
+
 //----------------- Funciones ajax para la base de datos ---------------
 
-//Función que comprueba si tenemos nuevo record o si viene vacio imprime el record en el panel de resultados. Si tenemos nuevo record llamará a grabarRecord()
+//Función que comprueba si tenemos nuevo record y lo imprime en el panel de resultados. Si tenemos nuevo record llamará a grabarRecord()
 const comprobarRecord = () => {
 	fetch('controllers/Controller.php')
 		.then((res) => res.json())
@@ -295,7 +441,6 @@ const comprobarRecord = () => {
 						grabarRecord(); //guarda el record en bbdd
 					} else {
 						recordTexto.innerHTML = data.puntuacion;
-						return console.log('no lo lograste');
 					}
 				} else {
 					recordTexto.innerHTML = data.puntuacion;
@@ -327,54 +472,6 @@ const grabarRecord = () => {
 		.catch((err) => {
 			console.error('ERROR: ', err.message);
 		});
-};
-
-//----------------- Funciones auxiliares-------------------------
-
-//Función que devuelve una letra random
-const getRandomChar = () => {
-	min = Math.ceil(97);
-	max = Math.floor(122);
-	let codAscii = Math.floor(Math.random() * (max - min + 1) + min);
-	if (codAscii === 98) {
-		return getRandomChar();
-	} else {
-		return String.fromCharCode(codAscii);
-	}
-};
-
-//Función que devuelve un número random
-const getRandomNumber = (min, max) => {
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-//-------------------- Funciones que resetean variables y estados -----------------------
-
-//Función que inicia el juego
-const start = () => {
-	//reseteamos variables
-	reset();
-
-	//damos visivilidad y animacion al panel resultados
-	puntuaje.innerHTML = '0';
-	buttonStart.classList.add('disable');
-	buttonStart.setAttribute('disabled', true);
-	setTimeout(() => {
-		startPanel.classList.add('display-none');
-	}, 1200);
-
-	//iniciamos datos temporales
-	time = Date.now();
-	setDifficult();
-	niveles = setInterval(setDifficult, 61000);
-
-	//agregamos elementos al liezo y lo arrancamos
-	drawBackground();
-	agregarElementos();
-	agBonus = setTimeout(agregarBonus, 65000);
-	requestAnimationFrame(draw);
 };
 
 //función que resetea variables globales
@@ -412,8 +509,8 @@ window.onload = () => {
 };
 
 //Controlamos la resolución de pantalla y redimensionamos el lienzo
-window.onresize = start2;
-function start2() {
+window.onresize = redimensionar;
+function redimensionar() {
 	const widthClient = document.documentElement.clientWidth;
 	if (widthClient <= 1000) {
 		canvas.width = '800';
