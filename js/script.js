@@ -4,13 +4,17 @@ canvas.width = '1200';
 canvas.height = '450';
 const ctx = canvas.getContext('2d');
 
-//identificamos elementos html
+//----------------- Identificamos elementos html ------------
+
+//panel start
 const buttonStart = document.getElementById('buttonStart');
-const puntuaje = document.getElementById('puntos');
-const startPanel = document.getElementById('start');
-const recordTexto = document.getElementById('record');
-const infoPanel = document.getElementById('panel-info');
 const infoTexto = document.getElementById('info');
+
+//panel resultados
+const puntuaje = document.getElementById('puntos');
+const recordTexto = document.getElementById('record');
+
+//panel modalidad
 const modalidadGroup = document.getElementById('modalidad-group');
 const elemModalidad = document.getElementsByName('modalidad');
 
@@ -24,6 +28,8 @@ sonidoRebote.src = 'sonidos/rebote.mp3';
 sonidoAtrapar.src = 'sonidos/atrapar.mp3';
 sonidoFinal.src = 'sonidos/final.mp3';
 sonidoSoltar.src = 'sonidos/soltarCosa.mp3';
+
+//-------------- Variables globales ---------------
 
 //variables guardado de datos
 let elementos = [];
@@ -82,7 +88,7 @@ const draw = () => {
 
 		if (elemento.y + elemento.vy > canvas.height - 85 || elemento.y + elemento.vy < 5) {
 			elemento.vy = -elemento.vy;
-			sonidoRebote.play();
+			controlAudio(sonidoRebote);
 		}
 		if (elemento.x + elemento.vx > canvas.width - 68 && elemento.letra !== 'b') {
 			stop = true;
@@ -92,7 +98,7 @@ const draw = () => {
 		}
 
 		if (elemento.x === 6) {
-			sonidoSoltar.play();
+			controlAudio(sonidoSoltar);
 		}
 	});
 	if (!stop) {
@@ -204,7 +210,7 @@ const agregarPuntos = ({ x, y, p }) => {
 const agregarBonus = () => {
 	let bono = getCosas({});
 	elementos.push(bono);
-	agBonus = setTimeout(agregarBonus, getRandomNumber(60000, 90000));
+	agBonus = setTimeout(agregarBonus, getRandomNumber(50000, 80000));
 };
 
 //Función que agrega el elemento b bonus al array para pintarlo
@@ -284,7 +290,7 @@ const capturar = (key) => {
 		infoJugada(total, cosas, calidad);
 
 		//sonido de atrapar cosas
-		sonidoAtrapar.play();
+		controlAudio(sonidoAtrapar);
 	} else {
 		fail++;
 		infoJugada(0, fail);
@@ -383,6 +389,15 @@ const getRandomNumber = (min, max) => {
 	return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
+//Función que controla el audio para reiniciarlo
+const controlAudio = (audio) => {
+	if (!audio.ended) {
+		audio.pause();
+		audio.currentTime = 0;
+	}
+	audio.play();
+};
+
 //-------------------- Funciones que resetean variables y estados. Inician y finalizan el juego -----------------------
 
 //Función que inicia el juego
@@ -396,7 +411,7 @@ const start = () => {
 	niveles = setInterval(setDifficult, 61000);
 
 	//iniciamos animaciones
-	switchAnimations('start');
+	switchAnimations();
 	//agregamos elementos al liezo y lo arrancamos
 	drawBackground();
 	agregarElementos();
@@ -412,7 +427,7 @@ const gameOver = () => {
 	clearTimeout(agBonus);
 	removeEventListener('keydown', keyPresionada);
 
-	switchAnimations('stop');
+	switchAnimations();
 	//dibujamos el game over en el lienzo
 	drawBackground();
 	pantallaFinal();
@@ -421,35 +436,22 @@ const gameOver = () => {
 	comprobarRecord();
 };
 
-const switchAnimations = (mode) => {
-	//damos visivilidad y animacion al panel resultados start
-	if (mode == 'start') {
-		puntuaje.innerHTML = '0';
-		buttonStart.classList.replace('enable', 'disable');
-		buttonStart.setAttribute('disabled', true);
-		modalidadGroup.classList.add('disable');
-		elemModalidad.forEach((element) => {
-			element.setAttribute('disabled', true);
-		});
-		setTimeout(() => {
-			startPanel.classList.add('display-none');
-			infoPanel.classList.remove('display-none');
-			infoTexto.classList.replace('disable', 'enable');
-		}, 1200);
-	} else {
-		//damos animaciones al panel de resultados gameover
-		infoTexto.classList.replace('enable', 'disable');
-		modalidadGroup.classList.replace('disable', 'enable');
-		elemModalidad.forEach((element) => {
-			element.removeAttribute('disabled');
-		});
-		setTimeout(() => {
-			buttonStart.removeAttribute('disabled');
-			buttonStart.classList.replace('disable', 'enable');
-			startPanel.classList.remove('display-none');
-			infoPanel.classList.add('display-none');
-		}, 1200);
-	}
+//damos visivilidad y animacion al panel resultados y al panel modalidad
+const switchAnimations = () => {
+	buttonStart.classList.toggle('enable');
+	buttonStart.classList.toggle('disable');
+	buttonStart.toggleAttribute('disabled');
+	modalidadGroup.classList.toggle('enable');
+	modalidadGroup.classList.toggle('disable');
+	infoTexto.classList.toggle('disable');
+	infoTexto.classList.toggle('enable');
+	elemModalidad.forEach((element) => {
+		element.toggleAttribute('disabled');
+	});
+	setTimeout(() => {
+		buttonStart.classList.toggle('display-none');
+		infoTexto.classList.toggle('display-none');
+	}, 1200);
 };
 
 //----------------- Funciones ajax para la base de datos ---------------
