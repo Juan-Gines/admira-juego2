@@ -14,6 +14,17 @@ const infoTexto = document.getElementById('info');
 const modalidadGroup = document.getElementById('modalidad-group');
 const elemModalidad = document.getElementsByName('modalidad');
 
+//Creamos elementos de sonido
+const sonidoRebote = document.createElement('audio');
+const sonidoAtrapar = document.createElement('audio');
+const sonidoFinal = document.createElement('audio');
+const sonidoSoltar = document.createElement('audio');
+
+sonidoRebote.src = 'sonidos/rebote.mp3';
+sonidoAtrapar.src = 'sonidos/atrapar.mp3';
+sonidoFinal.src = 'sonidos/final.mp3';
+sonidoSoltar.src = 'sonidos/soltarCosa.mp3';
+
 //variables guardado de datos
 let elementos = [];
 let time = Date.now();
@@ -71,11 +82,17 @@ const draw = () => {
 
 		if (elemento.y + elemento.vy > canvas.height - 85 || elemento.y + elemento.vy < 5) {
 			elemento.vy = -elemento.vy;
+			sonidoRebote.play();
 		}
 		if (elemento.x + elemento.vx > canvas.width - 68 && elemento.letra !== 'b') {
 			stop = true;
+			sonidoFinal.play();
 		} else if (elemento.x + elemento.vx > canvas.width - 65 && elemento.letra === 'b') {
 			elementos.splice(index, 1);
+		}
+
+		if (elemento.x === 6) {
+			sonidoSoltar.play();
 		}
 	});
 	if (!stop) {
@@ -265,6 +282,9 @@ const capturar = (key) => {
 
 		//mandamos el total de la jugada
 		infoJugada(total, cosas, calidad);
+
+		//sonido de atrapar cosas
+		sonidoAtrapar.play();
 	} else {
 		fail++;
 		infoJugada(0, fail);
