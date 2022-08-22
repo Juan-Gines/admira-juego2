@@ -28,12 +28,12 @@ const musicaPlay = document.createElement('audio');
 const volumenSonido = document.getElementById('sonido');
 const volumenMusica = document.getElementById('musica');
 
-sonidoRebote.src = 'sonidos/rebote.mp3';
-sonidoAtrapar.src = 'sonidos/atrapar.mp3';
-sonidoFinal.src = 'sonidos/final.mp3';
-sonidoSoltar.src = 'sonidos/soltarCosa.mp3';
-musicaDemo.src = 'sonidos/demo.mp3';
-musicaPlay.src = 'sonidos/play.mp3';
+sonidoRebote.src = 'sonidos/rebote.ogg';
+sonidoAtrapar.src = 'sonidos/atrapar.ogg';
+sonidoFinal.src = 'sonidos/final.ogg';
+sonidoSoltar.src = 'sonidos/soltarCosa.ogg';
+musicaDemo.src = 'sonidos/demo.ogg';
+musicaPlay.src = 'sonidos/play.ogg';
 musicaPlay.loop = true;
 
 //-------------- Variables globales ---------------
