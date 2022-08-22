@@ -20,7 +20,8 @@ body {
 .canvas,
 .resultados,
 .instrucciones,
-.modalidad {
+.modalidad,
+.instrucciones-body-container {
 	display: flex;
 	margin-bottom: 10px;
 }
@@ -42,7 +43,7 @@ body {
 }
 
 .instrucciones-header,
-.instrucciones-body {
+.instrucciones-body-container {
 	width: 1200px;
 }
 
@@ -55,6 +56,17 @@ p {
 	margin: 0 0 5px 15px;
 }
 
+.instrucciones-body-container {
+	flex-direction: row;
+	align-items: center;
+}
+.instrucciones-body {
+	flex-shrink: 3;
+}
+.panel-sonido {
+	flex-shrink: 1;
+	margin: 0 10px;
+}
 /*Imagenes cargadas*/
 img {
 	display: none;
@@ -158,6 +170,7 @@ img {
 @media screen and (max-width: 1200px) {
 	.instrucciones-header,
 	.instrucciones-body,
+	.instrucciones-body-container,
 	.canvas,
 	.modalidad,
 	.resultados {
@@ -168,6 +181,7 @@ img {
 @media screen and (max-width: 1000px) {
 	.instrucciones-header,
 	.instrucciones-body,
+	.instrucciones-body-container,
 	.canvas,
 	.modalidad,
 	.resultados {

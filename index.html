@@ -27,16 +27,29 @@
 			<header class="instrucciones-header">
 				<h3 class="instrucciones-title">Instrucciones</h3>
 			</header>
-			<div class="instrucciones-body">
-				<p>
-					Consigue la máxima puntuación presionando la tecla de la primera letra de las cosas que
-					aparecerán en pantalla.
-				</p>
-				<p>¡Cuidado!, si las cosas llegan al borde derecho de la pantalla el juego termina.</p>
-				<p>
-					Si atrapas el Bonus (un platillo volante) con la tecla b, cogerás todas las cosas que haya
-					en pantalla y conseguirás puntuación extra. ¡Buena suerte!
-				</p>
+			<div class="instrucciones-body-container">
+				<div class="instrucciones-body">
+					<p>
+						Consigue la máxima puntuación presionando la tecla de la primera letra de las cosas que
+						aparecerán en pantalla.
+					</p>
+					<p>¡Cuidado!, si las cosas llegan al borde derecho de la pantalla el juego termina.</p>
+					<p>
+						Si atrapas el Bonus (un platillo volante) con la tecla b, cogerás todas las cosas que
+						haya en pantalla y conseguirás puntuación extra. ¡Buena suerte!
+					</p>
+				</div>
+				<div class="panel-sonido">
+					<div class="row">
+						<label for="musica" class="form-label">Música</label>
+						<input id="musica" type="range" class="form-range" min="0" max="100" step="1" />
+					</div>
+					<div class="row">
+						<label for="sonido" class="form-label">Sonido</label>
+						<input id="sonido" type="range" class="form-range" min="0" max="100" step="1" />
+					</div>
+					<div class="sonidos"></div>
+				</div>
 			</div>
 		</section>
 

@@ -23,11 +23,18 @@ const sonidoRebote = document.createElement('audio');
 const sonidoAtrapar = document.createElement('audio');
 const sonidoFinal = document.createElement('audio');
 const sonidoSoltar = document.createElement('audio');
+const musicaDemo = document.createElement('audio');
+const musicaPlay = document.createElement('audio');
+const volumenSonido = document.getElementById('sonido');
+const volumenMusica = document.getElementById('musica');
 
 sonidoRebote.src = 'sonidos/rebote.mp3';
 sonidoAtrapar.src = 'sonidos/atrapar.mp3';
 sonidoFinal.src = 'sonidos/final.mp3';
 sonidoSoltar.src = 'sonidos/soltarCosa.mp3';
+musicaDemo.src = 'sonidos/demo.mp3';
+musicaPlay.src = 'sonidos/play.mp3';
+musicaPlay.loop = true;
 
 //-------------- Variables globales ---------------
 
@@ -92,7 +99,6 @@ const draw = () => {
 		}
 		if (elemento.x + elemento.vx > canvas.width - 68 && elemento.letra !== 'b') {
 			stop = true;
-			sonidoFinal.play();
 		} else if (elemento.x + elemento.vx > canvas.width - 65 && elemento.letra === 'b') {
 			elementos.splice(index, 1);
 		}
@@ -412,11 +418,15 @@ const start = () => {
 
 	//iniciamos animaciones
 	switchAnimations();
+
 	//agregamos elementos al liezo y lo arrancamos
 	drawBackground();
 	agregarElementos();
 	agBonus = setTimeout(agregarBonus, 65000);
 	requestAnimationFrame(draw);
+
+	//agregamos música
+	controlAudio(musicaPlay);
 };
 
 const gameOver = () => {
@@ -431,6 +441,11 @@ const gameOver = () => {
 	//dibujamos el game over en el lienzo
 	drawBackground();
 	pantallaFinal();
+
+	//Cambiamos música
+	musicaPlay.pause();
+	musicaPlay.currentTime = 0;
+	sonidoFinal.play();
 
 	//comprobamos si hemos conseguido un nuevo récord
 	comprobarRecord();
@@ -557,4 +572,21 @@ elemModalidad.forEach((element) => {
 	element.addEventListener('change', (e) => {
 		modalidad = document.querySelector('input[name="modalidad"]:checked').value;
 	});
+});
+
+//Evento que controla el volumen de los sonidos
+
+volumenSonido.addEventListener('change', (e) => {
+	const vol = e.target.value / 100;
+	sonidoAtrapar.volume = vol;
+	sonidoRebote.volume = vol;
+	sonidoSoltar.volume = vol;
+});
+
+//Evento que controla el volumen de la música
+
+volumenMusica.addEventListener('change', (e) => {
+	const vol = e.target.value / 100;
+	musicaPlay.volume = vol;
+	sonidoFinal.volume = vol;
 });
